@@ -187,4 +187,14 @@ Shaka.canPlayType = function(type) {
   return '';
 };
 
+Shaka.canHandleSource = function(source) {
+  const urlExtRE = /\.mpd|\.m3u8/i;
+  if (Shaka.canPlayType(source.type)) {
+    return 'probably';
+  } else if (urlExtRE.test(source.src)) {
+    return 'maybe';
+  }
+  return '';
+}
+
 export default Shaka;
