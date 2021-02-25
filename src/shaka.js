@@ -173,10 +173,14 @@ Shaka.isSupported = function() {
 };
 
 Shaka.canPlaySource = function(source, tech) {
+  return Shaka.canPlayType(source.type);
+};
+
+Shaka.canPlayType = function(type) {
 
   const dashTypeRE = /^(application\/dash\+xml|application\/x-mpegURL)/i;
 
-  if (dashTypeRE.test(source.type)) {
+  if (dashTypeRE.test(type)) {
     return 'probably';
   }
 
