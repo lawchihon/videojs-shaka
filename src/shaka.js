@@ -176,26 +176,30 @@ Shaka.isSupported = function() {
   return !!window.MediaSource;
 };
 
-Shaka.canPlaySource = function(source, tech) {
-  return Shaka.canPlayType(source.type);
+Shaka.canPlaySource = function(source, options) {
+  return Shaka.canPlayType(source.type, options);
 };
 
-Shaka.canPlayType = function(type) {
+Shaka.canPlayType = function(type, options) {
 
-  const dashTypeRE = /^(application\/dash\+xml|application\/x-mpegURL)/i;
+  const dashTypeRE = /^application\/dash\+xml/i;
+  const hlsTypeRe = /^application\/x-mpegURL/i;
 
-  if (dashTypeRE.test(type)) {
+  if (options.dash !== false && dashTypeRE.test(type) ||
+    options.hls !== false && hlsTypeRe.test(type)) {
     return 'probably';
   }
 
   return '';
 };
 
-Shaka.canHandleSource = function(source) {
-  const urlExtRE = /\.mpd|\.m3u8/i;
-  if (Shaka.canPlayType(source.type)) {
+Shaka.canHandleSource = function(source, options) {
+  const dashExtRE = /\.mpd/i;
+  const hlsExtRE = /\.m3u8/i;
+  if (Shaka.canPlayType(source.type, options)) {
     return 'probably';
-  } else if (urlExtRE.test(source.src)) {
+  } else if (options.dash !== false && dashExtRE.test(source.src) ||
+    options.hls !== false && hlsExtRE.test(source.src)) {
     return 'maybe';
   }
   return '';
