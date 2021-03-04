@@ -101,10 +101,11 @@ class Shaka extends Html5 {
 
     this.shaka_.load(src).then(function() {
       me.initShakaMenus();
-    }).catch(me.retriggerError.bind(this));
+    }).catch(me.retriggerError.bind(me));
   }
 
   dispose() {
+    super.dispose();
     if (this.shaka_) {
       this.shaka_.unload();
       this.shaka_.destroy();
@@ -156,7 +157,10 @@ class Shaka extends Html5 {
     // only reset the shaka player in 10ms async, so that the rest of the
     // calling function finishes
     setTimeout(() => {
-      this.dispose();
+      if (this.shaka_) {
+        this.shaka_.unload();
+        this.shaka_.destroy();
+      }
     }, 10);
   }
 
